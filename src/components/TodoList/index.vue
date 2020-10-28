@@ -8,6 +8,8 @@
       :taskList="taskList"
       @toggleTask="toggleTask"
       @delTask="delTask"
+      @editTask="editTask"
+      @changeTask="changeTask"
     />
   </div>
 </template>
@@ -29,7 +31,8 @@ export default {
     const addTask = (newTask) => {
       taskList.value.push({
         task: newTask,
-        done: false
+        done: false,
+        isEdit: false
       })
     }
     const toggleTask = (idx) => {
@@ -46,13 +49,38 @@ export default {
     const delTask = (idx) => {
       taskList.value.splice(idx, 1)
     }
+    const editTask = (idx) => {
+      taskList.value = taskList.value.map((task, index) => {
+        if (idx == index) {
+          return {
+            ...task,
+            isEdit: !task.isEdit
+          }
+        }
+        return task
+      })
+    }
+    const changeTask = ([idx, newTask]) => {
+      taskList.value = taskList.value.map((task, index) => {
+        if (idx == index) {
+          return {
+            ...task,
+            task: newTask,
+            isEdit: !task.isEdit
+          }
+        }
+        return task
+      })
+    }
 
     return {
       task,
       taskList,
       addTask,
       toggleTask,
-      delTask
+      delTask,
+      editTask,
+      changeTask
     }
   }
 }

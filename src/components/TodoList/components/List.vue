@@ -11,7 +11,19 @@
         :checked="item.done"
         @click="handleToggleTask(idx)"
       >
-      {{ item.task }}
+      <input
+        type="text"
+        v-if="item.isEdit"
+        v-focus
+        :value="item.task"
+        @blur="handleChangeTask(idx, $event)"
+      >
+      <span
+        v-else
+        @dblclick="handleEditTask(idx)"
+      >
+        {{ item.task }}
+      </span>
       <button @click="delTask(idx)">delete</button>
     </div>
   </div>
@@ -19,6 +31,13 @@
 
 <script>
 export default {
+  directives: {
+    focus: {
+      mounted(el) {
+        el.focus()
+      }
+    }
+  },
   props: {
     taskList: Array
   },
@@ -29,10 +48,18 @@ export default {
     const delTask = (idx) => {
       emit('delTask', idx)
     }
+    const handleEditTask = (idx) => {
+      emit('editTask', idx)
+    }
+    const handleChangeTask = (idx, e) => {
+      emit('changeTask', [idx, e.target.value])
+    }
 
     return {
       handleToggleTask,
-      delTask
+      delTask,
+      handleEditTask,
+      handleChangeTask
     }
   }
 }
