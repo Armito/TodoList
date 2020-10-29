@@ -13,25 +13,24 @@
 <script>
 export default {
   props: {
-    task: String
+    task: String,
   },
-  setup({task}, {emit}) {
+  setup({ task }, { emit }) {
     const handleInputChange = (e) => {
-      emit('update:task', e.target.value)
-    }
+      emit('update:task', e.target.value);
+    };
     const handleAddTask = () => {
-      emit('addTask')
-    }
+      emit('addTask');
+    };
 
     return {
       task,
       handleInputChange,
-      handleAddTask
-    }
-  }
-}
+      handleAddTask,
+    };
+  },
+};
 </script>
 
 <style scoped>
-
 </style>

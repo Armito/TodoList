@@ -35,37 +35,37 @@ export default {
   directives: {
     focus: {
       mounted(el) {
-        el.focus()
-      }
-    }
+        el.focus();
+      },
+    },
   },
   props: {
-    taskList: Array
+    taskList: Array,
   },
-  setup(props, {emit}) {
+  setup(props, { emit }) {
     const handleToggleTask = (idx) => {
-      emit('toggleTask', idx)
-    }
+      emit('toggleTask', idx);
+    };
     const handleEditTask = (done, idx) => {
       if (!done) {
-        emit('editTask', idx)
+        emit('editTask', idx);
       }
-    }
+    };
     const handleChangeTask = (idx, e) => {
-      emit('changeTask', [idx, e.target.value])
-    }
+      emit('changeTask', [idx, e.target.value]);
+    };
     const handleDelTask = (idx) => {
-      emit('delTask', idx)
-    }
+      emit('delTask', idx);
+    };
 
     return {
       handleToggleTask,
       handleEditTask,
       handleChangeTask,
       handleDelTask,
-    }
-  }
-}
+    };
+  },
+};
 </script>
 
 <style socped>
