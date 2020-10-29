@@ -17,14 +17,15 @@
         v-focus
         :value="item.task"
         @blur="handleChangeTask(idx, $event)"
+        @keyup.enter="handleChangeTask(idx, $event)"
       >
       <span
         v-else
-        @dblclick="handleEditTask(idx)"
+        @dblclick="handleEditTask(item.done, idx)"
       >
         {{ item.task }}
       </span>
-      <button @click="delTask(idx)">delete</button>
+      <button @click="handleDelTask(idx)">delete</button>
     </div>
   </div>
 </template>
@@ -45,21 +46,23 @@ export default {
     const handleToggleTask = (idx) => {
       emit('toggleTask', idx)
     }
-    const delTask = (idx) => {
-      emit('delTask', idx)
-    }
-    const handleEditTask = (idx) => {
-      emit('editTask', idx)
+    const handleEditTask = (done, idx) => {
+      if (!done) {
+        emit('editTask', idx)
+      }
     }
     const handleChangeTask = (idx, e) => {
       emit('changeTask', [idx, e.target.value])
     }
+    const handleDelTask = (idx) => {
+      emit('delTask', idx)
+    }
 
     return {
       handleToggleTask,
-      delTask,
       handleEditTask,
-      handleChangeTask
+      handleChangeTask,
+      handleDelTask,
     }
   }
 }

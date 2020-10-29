@@ -4,8 +4,9 @@
       type="text"
       :value="task"
       @change="handleInputChange"
+      @keyup.enter="handleAddTask"
     >
-    <button @click="addTask">新建</button>
+    <button @click="handleAddTask">新建</button>
   </div>
 </template>
 
@@ -15,20 +16,17 @@ export default {
     task: String
   },
   setup({task}, {emit}) {
-    let newTask = ''
     const handleInputChange = (e) => {
-      newTask = e.target.value
-      e.target.value = ''
-      emit('update', newTask)
+      emit('update:task', e.target.value)
     }
-    const addTask = () => {
-      emit('addTask', newTask)
+    const handleAddTask = () => {
+      emit('addTask')
     }
 
     return {
       task,
       handleInputChange,
-      addTask
+      handleAddTask
     }
   }
 }

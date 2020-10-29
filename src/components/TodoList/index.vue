@@ -6,8 +6,8 @@
     />
     <List
       :taskList="taskList"
-      @toggleTask="toggleTask"
       @delTask="delTask"
+      @toggleTask="toggleTask"
       @editTask="editTask"
       @changeTask="changeTask"
     />
@@ -28,13 +28,22 @@ export default {
   setup() {
     const task = ref('')
     const taskList = ref([])
-    const addTask = (newTask) => {
-      taskList.value.push({
-        task: newTask,
-        done: false,
-        isEdit: false
-      })
+    // 增
+    const addTask = () => {
+      if (task.value.trim().length) {
+        taskList.value.push({
+          task: task.value,
+          done: false,
+          isEdit: false
+        })
+      }
+      task.value = ''
     }
+    // 删
+    const delTask = (idx) => {
+      taskList.value.splice(idx, 1)
+    }
+    // 改：done
     const toggleTask = (idx) => {
       taskList.value = taskList.value.map((task, index) => {
         if (idx == index) {
@@ -46,9 +55,7 @@ export default {
         return task
       })
     }
-    const delTask = (idx) => {
-      taskList.value.splice(idx, 1)
-    }
+    // 改：isEdit
     const editTask = (idx) => {
       taskList.value = taskList.value.map((task, index) => {
         if (idx == index) {
@@ -60,6 +67,7 @@ export default {
         return task
       })
     }
+    // 改：task
     const changeTask = ([idx, newTask]) => {
       taskList.value = taskList.value.map((task, index) => {
         if (idx == index) {
@@ -76,9 +84,10 @@ export default {
     return {
       task,
       taskList,
+
       addTask,
-      toggleTask,
       delTask,
+      toggleTask,
       editTask,
       changeTask
     }
@@ -90,5 +99,11 @@ export default {
 .todolist {
   width: 300px;
   margin: 20px auto;
+
+  -moz-user-select:none; /*火狐*/
+  -webkit-user-select:none; /*webkit浏览器*/
+  -ms-user-select:none; /*IE10*/
+  user-select:none;
+
 }
 </style>
