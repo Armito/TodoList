@@ -20,7 +20,7 @@ import Input from './components/Input.vue';
 import Filter from './components/Filter.vue';
 import List from './components/List.vue';
 
-import { ref } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 
 export default {
   components: {
@@ -29,33 +29,48 @@ export default {
     List,
   },
   setup() {
+    const taskId = ref(0);
     const task = ref('');
     const taskList = ref([]);
+    const taskStatus = ref(0);
+
+    onMounted(() => {
+      sessionStorage.setItem('TaskList', JSON.stringify([]));
+    });
 
     // 增
     const addTask = () => {
       if (task.value.trim().length) {
-        taskList.value = JSON.parse(sessionStorage.getItem('TaskList'));
+        taskList.value = JSON.parse(sessionStorage.getItem('TaskList')) || taskList.value;
         taskList.value.push({
+          id: taskId.value++,
           task: task.value,
           done: false,
           isEdit: false,
         });
         sessionStorage.setItem('TaskList', JSON.stringify(taskList.value));
+        nextTick(() => {
+          filterTask(taskStatus.value);
+        });
       }
       task.value = '';
     };
     // 删
-    const delTask = (idx) => {
+    const delTask = (id) => {
       taskList.value = JSON.parse(sessionStorage.getItem('TaskList'));
-      taskList.value.splice(idx, 1);
+      taskList.value = taskList.value.filter((task) => {
+        return task.id !== id;
+      });
       sessionStorage.setItem('TaskList', JSON.stringify(taskList.value));
+      nextTick(() => {
+        filterTask(taskStatus.value);
+      });
     };
     // 改：done
-    const toggleTask = (idx) => {
+    const toggleTask = (id) => {
       taskList.value = JSON.parse(sessionStorage.getItem('TaskList'));
-      taskList.value = taskList.value.map((task, index) => {
-        if (idx == index) {
+      taskList.value = taskList.value.map((task) => {
+        if (id == task.id) {
           return {
             ...task,
             done: !task.done,
@@ -64,12 +79,15 @@ export default {
         return task;
       });
       sessionStorage.setItem('TaskList', JSON.stringify(taskList.value));
+      nextTick(() => {
+        filterTask(taskStatus.value);
+      });
     };
     // 改：isEdit
-    const editTask = (idx) => {
+    const editTask = (id) => {
       taskList.value = JSON.parse(sessionStorage.getItem('TaskList'));
-      taskList.value = taskList.value.map((task, index) => {
-        if (idx == index) {
+      taskList.value = taskList.value.map((task) => {
+        if (id == task.id) {
           return {
             ...task,
             isEdit: !task.isEdit,
@@ -80,10 +98,10 @@ export default {
       sessionStorage.setItem('TaskList', JSON.stringify(taskList.value));
     };
     // 改：task
-    const changeTask = ([idx, newTask]) => {
+    const changeTask = ([id, newTask]) => {
       taskList.value = JSON.parse(sessionStorage.getItem('TaskList'));
-      taskList.value = taskList.value.map((task, index) => {
-        if (idx == index) {
+      taskList.value = taskList.value.map((task) => {
+        if (id == task.id) {
           return {
             ...task,
             task: newTask,
@@ -96,6 +114,7 @@ export default {
     };
     // 查
     const filterTask = (status) => {
+      taskStatus.value = status;
       taskList.value = JSON.parse(sessionStorage.getItem('TaskList'));
       taskList.value = taskList.value.filter((task) => {
         if (status == 0) {
@@ -129,10 +148,5 @@ export default {
 .todolist {
   width: 300px;
   margin: 20px auto;
-
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
 </style>

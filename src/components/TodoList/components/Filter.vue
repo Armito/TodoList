@@ -5,17 +5,17 @@
       name="TASK_STATUS"
       value="0"
       checked
-    >ALL
+    >全部
     <input
       type="radio"
       name="TASK_STATUS"
       value="1"
-    >Undone
+    >未完成
     <input
       type="radio"
       name="TASK_STATUS"
       value="2"
-    >Done
+    >已完成
   </div>
 </template>
 

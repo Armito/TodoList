@@ -3,29 +3,29 @@
     <div
       class="list-item"
       :class="item.done ? 'del' : ''"
-      v-for="(item, idx) in taskList"
-      :key="idx"
+      v-for="item in taskList"
+      :key="item.id"
     >
       <input
         type="checkbox"
         :checked="item.done"
-        @click="handleToggleTask(idx)"
+        @click="handleToggleTask(item.id)"
       >
       <input
         type="text"
         v-if="item.isEdit"
         v-focus
         :value="item.task"
-        @blur="handleChangeTask(idx, $event)"
-        @keyup.enter="handleChangeTask(idx, $event)"
+        @blur="handleChangeTask(item.id, $event)"
+        @keyup.enter="handleChangeTask(item.id, $event)"
       >
       <span
         v-else
-        @dblclick="handleEditTask(item.done, idx)"
+        @dblclick.prevent="handleEditTask(item.id, item.done)"
       >
         {{ item.task }}
       </span>
-      <button @click="handleDelTask(idx)">delete</button>
+      <button @click="handleDelTask(item.id)">delete</button>
     </div>
   </div>
 </template>
@@ -43,19 +43,19 @@ export default {
     taskList: Array,
   },
   setup(props, { emit }) {
-    const handleToggleTask = (idx) => {
-      emit('toggleTask', idx);
+    const handleToggleTask = (id) => {
+      emit('toggleTask', id);
     };
-    const handleEditTask = (done, idx) => {
+    const handleEditTask = (id, done) => {
       if (!done) {
-        emit('editTask', idx);
+        emit('editTask', id);
       }
     };
-    const handleChangeTask = (idx, e) => {
-      emit('changeTask', [idx, e.target.value]);
+    const handleChangeTask = (id, e) => {
+      emit('changeTask', [id, e.target.value]);
     };
-    const handleDelTask = (idx) => {
-      emit('delTask', idx);
+    const handleDelTask = (id) => {
+      emit('delTask', id);
     };
 
     return {
