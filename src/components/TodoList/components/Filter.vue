@@ -1,32 +1,34 @@
 <template>
   <div @change="handleFilterTask">
-    <input
-      type="radio"
-      name="TASK_STATUS"
-      value="0"
-      checked
-    >全部
-    <input
-      type="radio"
-      name="TASK_STATUS"
-      value="1"
-    >未完成
-    <input
-      type="radio"
-      name="TASK_STATUS"
-      value="2"
-    >已完成
+    <template
+      v-for="option in options"
+      :key="option.value"
+    >
+      <input
+        type="radio"
+        name="TASK_STATUS"
+        :value="option.value"
+        :checked="option.value == 0"
+      >
+      {{ option.label }}
+    </template>
   </div>
 </template>
 
 <script>
 export default {
-  setup(props, { emit }) {
+  props: {
+    options: Array
+  },
+  setup({ options }, { emit }) {
+    console.log(options)
+
     const handleFilterTask = (e) => {
       emit('filterTask', e.target.value);
     };
 
     return {
+      options,
       handleFilterTask,
     };
   },

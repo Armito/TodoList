@@ -4,7 +4,10 @@
       v-model:task="task"
       @addTask="addTask"
     />
-    <Filter @filterTask="filterTask" />
+    <Filter
+      :options="options"
+      @filterTask="filterTask"
+    />
     <List
       :taskList="taskList"
       @delTask="delTask"
@@ -20,6 +23,7 @@ import Input from './components/Input.vue';
 import Filter from './components/Filter.vue';
 import List from './components/List.vue';
 
+import { filterOptions } from './js/todoList';
 import { ref, onMounted, nextTick } from 'vue';
 
 export default {
@@ -33,6 +37,9 @@ export default {
     const task = ref('');
     const taskList = ref([]);
     const taskStatus = ref(0);
+    const options = ref([]);
+    
+    options.value = filterOptions;
 
     onMounted(() => {
       sessionStorage.setItem('TaskList', JSON.stringify([]));
@@ -132,6 +139,7 @@ export default {
     return {
       task,
       taskList,
+      options,
 
       addTask,
       delTask,
