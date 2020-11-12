@@ -50,7 +50,7 @@ const mutations = {
       if (task.id == id) {
         return {
           ...task,
-          task: task_new,
+          task: task_new.trim() || task.task,
           done: false,
           isEdit: false
         }

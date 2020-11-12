@@ -1,12 +1,20 @@
 <template>
-  <div>
-    <input
+  <div class="todolist-input">
+    <van-field
       type="text"
-      :value="task_new"
-      @change="handleChangeTask"
+      v-model="task_new"
       @keyup.enter="handleAddTask"
     >
-    <button @click="handleAddTask">新建</button>
+      <template #button>
+        <van-button
+          type="primary"
+          size="small"
+          @click="handleAddTask"
+        >
+          新建
+        </van-button>
+      </template>
+    </van-field>
   </div>
 </template>
 
@@ -18,9 +26,6 @@ export default {
   setup() {
     const store = useStore();
     const task_new = ref('');
-    const handleChangeTask = (e) => {
-      task_new.value = e.target.value;
-    };
     const handleAddTask = () => {
       store.commit('addTask', task_new.value);
       task_new.value = '';
@@ -28,12 +33,14 @@ export default {
 
     return {
       task_new,
-      handleChangeTask,
       handleAddTask,
     };
   },
 };
 </script>
 
-<style>
+<style scoped>
+.todolist-input {
+  margin: 0px auto 20px;
+}
 </style>

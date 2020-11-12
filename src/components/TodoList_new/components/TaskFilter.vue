@@ -37,6 +37,11 @@ export default {
 
 <style lang="scss" scoped>
 .todolist-filter {
+  margin-bottom: 20px;;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: nowrap;
 
   label {
     cursor: pointer;

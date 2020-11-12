@@ -1,6 +1,6 @@
 <template>
   <div class="todolist-new">
-    <h3>Todolist New</h3>
+    <h3>TODOLIST</h3>
     <TaskInput />
     <TaskFilter />
     <TaskList />
@@ -25,5 +25,6 @@ export default {
 .todolist-new {
   width: 300px;
   margin: 20px auto;
+  padding: 20px;
 }
 </style>
