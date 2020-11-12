@@ -27,6 +27,7 @@
       </span>
       <button @click="handleDelTask(item.id)">delete</button>
     </div>
+    <div>共{{ taskList.length }}件</div>
   </div>
 </template>
 

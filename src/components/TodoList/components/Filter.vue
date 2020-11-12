@@ -21,8 +21,6 @@ export default {
     options: Array
   },
   setup({ options }, { emit }) {
-    console.log(options)
-
     const handleFilterTask = (e) => {
       emit('filterTask', e.target.value);
     };

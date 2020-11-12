@@ -23,8 +23,8 @@ import Input from './components/Input.vue';
 import Filter from './components/Filter.vue';
 import List from './components/List.vue';
 
-import { filterOptions } from './js/todoList';
 import { ref, onMounted, nextTick } from 'vue';
+import { filterOptions } from './js/todoList';
 
 export default {
   components: {
@@ -38,7 +38,7 @@ export default {
     const taskList = ref([]);
     const taskStatus = ref(0);
     const options = ref([]);
-    
+
     options.value = filterOptions;
 
     onMounted(() => {
@@ -140,7 +140,6 @@ export default {
       task,
       taskList,
       options,
-
       addTask,
       delTask,
       toggleTask,
