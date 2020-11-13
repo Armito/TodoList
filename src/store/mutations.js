@@ -34,6 +34,9 @@ const mutations = {
   },
   // 开始编辑任务
   editTask(state, id) {
+    if (state._taskList.find((task) => task.id == id).done) {
+      return
+    };
     state._taskList = state._taskList.map((task) => {
       if (task.id == id) {
         return {
@@ -51,7 +54,6 @@ const mutations = {
         return {
           ...task,
           task: task_new.trim() || task.task,
-          done: false,
           isEdit: false
         }
       }

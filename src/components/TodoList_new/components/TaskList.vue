@@ -18,11 +18,11 @@
         >
           {{ task.task }}
         </span>
-        <van-field
+        <input
           v-else
           type="text"
-          v-model="task.task"
-          :autofocus="true"
+          :value="task.task"
+          v-focus
           @blur="handleBlur(task.id, $event)"
           @keyup.enter="handleBlur(task.id, $event)"
         />
@@ -44,6 +44,13 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
+  directives: {
+    focus: {
+      mounted(el) {
+        el.focus();
+      }
+    }
+  },
   setup() {
     const store = useStore();
     const taskList = computed(() => store.getters.displayList);
@@ -84,10 +91,6 @@ export default {
     flex-wrap: nowrap;
 
     &-left {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: nowrap;
       user-select: none;
 
       input:nth-child(1) {
