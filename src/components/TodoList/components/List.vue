@@ -2,7 +2,6 @@
   <div class="com-list">
     <div
       class="list-item"
-      :class="item.done ? 'del' : ''"
       v-for="item in taskList"
       :key="item.id"
     >
@@ -11,20 +10,21 @@
         :checked="item.done"
         @click="handleToggleTask(item.id)"
       >
-      <input
-        type="text"
-        v-if="item.isEdit"
-        v-focus
-        :value="item.task"
-        @blur="handleChangeTask(item.id, $event)"
-        @keyup.enter="handleChangeTask(item.id, $event)"
-      >
       <span
-        v-else
+        v-if="!item.isEdit"
+        :class="item.done ? 'del' : ''"
         @dblclick.prevent="handleEditTask(item.id, item.done)"
       >
         {{ item.task }}
       </span>
+      <input
+        v-else
+        type="text"
+        v-focus
+        :value="item.task"
+        @blur="handleChangeTask(item.id, $event)"
+        @keyup.enter="handleChangeTask(item.id, $event)"
+      >  
       <button @click="handleDelTask(item.id)">delete</button>
     </div>
     <div>共{{ taskList.length }}件</div>
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+
 export default {
   directives: {
     focus: {
@@ -41,7 +43,10 @@ export default {
     },
   },
   props: {
-    taskList: Array,
+    taskList: {
+      type: Array,
+      default: [],
+    },
   },
   setup(props, { emit }) {
     const handleToggleTask = (id) => {
@@ -70,8 +75,8 @@ export default {
 </script>
 
 <style socped>
-.list-item.del {
-  color: #ccc;
+.list-item .del {
   text-decoration: line-through;
+  opacity: 0.3;
 }
 </style>

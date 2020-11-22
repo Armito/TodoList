@@ -6,10 +6,12 @@
     />
     <Filter
       :options="options"
+      :taskStatus="taskStatus"
       @filterTask="filterTask"
     />
     <List
-      :taskList="taskList"
+      :taskList="taskListDisplay"
+      :taskStatus="taskStatus"
       @delTask="delTask"
       @toggleTask="toggleTask"
       @editTask="editTask"
@@ -23,8 +25,9 @@ import Input from './components/Input.vue';
 import Filter from './components/Filter.vue';
 import List from './components/List.vue';
 
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, computed } from 'vue';
 import { filterOptions } from './js/todoList';
+import { createRandomId } from '../../assets/js/util'
 
 export default {
   components: {
@@ -33,49 +36,39 @@ export default {
     List,
   },
   setup() {
-    const taskId = ref(0);
     const task = ref('');
     const taskList = ref([]);
+    const options = filterOptions;
     const taskStatus = ref(0);
-    const options = ref([]);
-
-    options.value = filterOptions;
-
-    onMounted(() => {
-      sessionStorage.setItem('TaskList', JSON.stringify([]));
+    const taskListDisplay = computed(() => {
+      switch (taskStatus.value) {
+        case 1:
+          return taskList.value.filter((task) => !task.done);
+        case 2:
+          return taskList.value.filter((task) => task.done);
+        default:
+          return taskList.value;
+      }
     });
 
     // 增
     const addTask = () => {
       if (task.value.trim().length) {
-        taskList.value = JSON.parse(sessionStorage.getItem('TaskList')) || taskList.value;
         taskList.value.push({
-          id: taskId.value++,
+          id: createRandomId(),
           task: task.value,
           done: false,
           isEdit: false,
         });
-        sessionStorage.setItem('TaskList', JSON.stringify(taskList.value));
-        nextTick(() => {
-          filterTask(taskStatus.value);
-        });
       }
       task.value = '';
     };
-    // 删
-    const delTask = (id) => {
-      taskList.value = JSON.parse(sessionStorage.getItem('TaskList'));
-      taskList.value = taskList.value.filter((task) => {
-        return task.id !== id;
-      });
-      sessionStorage.setItem('TaskList', JSON.stringify(taskList.value));
-      nextTick(() => {
-        filterTask(taskStatus.value);
-      });
+    // 查
+    const filterTask = (status) => {
+      taskStatus.value = Number(status);
     };
     // 改：done
     const toggleTask = (id) => {
-      taskList.value = JSON.parse(sessionStorage.getItem('TaskList'));
       taskList.value = taskList.value.map((task) => {
         if (id == task.id) {
           return {
@@ -85,14 +78,9 @@ export default {
         }
         return task;
       });
-      sessionStorage.setItem('TaskList', JSON.stringify(taskList.value));
-      nextTick(() => {
-        filterTask(taskStatus.value);
-      });
     };
     // 改：isEdit
     const editTask = (id) => {
-      taskList.value = JSON.parse(sessionStorage.getItem('TaskList'));
       taskList.value = taskList.value.map((task) => {
         if (id == task.id) {
           return {
@@ -102,11 +90,9 @@ export default {
         }
         return task;
       });
-      sessionStorage.setItem('TaskList', JSON.stringify(taskList.value));
     };
     // 改：task
     const changeTask = ([id, newTask]) => {
-      taskList.value = JSON.parse(sessionStorage.getItem('TaskList'));
       taskList.value = taskList.value.map((task) => {
         if (id == task.id) {
           return {
@@ -117,29 +103,19 @@ export default {
         }
         return task;
       });
-      sessionStorage.setItem('TaskList', JSON.stringify(taskList.value));
     };
-    // 查
-    const filterTask = (status) => {
-      taskStatus.value = status;
-      taskList.value = JSON.parse(sessionStorage.getItem('TaskList'));
-      taskList.value = taskList.value.filter((task) => {
-        if (status == 0) {
-          return true;
-        }
-        if (status == 1) {
-          return !task.done;
-        }
-        if (status == 2) {
-          return task.done;
-        }
-      });
+    // 删
+    const delTask = (id) => {
+      taskList.value = taskList.value.filter((task) => task.id !== id);
     };
+    
 
     return {
       task,
-      taskList,
+      // taskList,
+      taskListDisplay,
       options,
+      taskStatus,
       addTask,
       delTask,
       toggleTask,

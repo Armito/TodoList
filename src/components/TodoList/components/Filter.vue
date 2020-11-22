@@ -1,6 +1,6 @@
 <template>
   <div @change="handleFilterTask">
-    <template
+    <label
       v-for="option in options"
       :key="option.value"
     >
@@ -11,22 +11,22 @@
         :checked="option.value == 0"
       >
       {{ option.label }}
-    </template>
+    </label>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    options: Array
+    options: Array,
+    taskStatus: Number
   },
-  setup({ options }, { emit }) {
+  setup(props, { emit }) {
     const handleFilterTask = (e) => {
       emit('filterTask', e.target.value);
     };
 
     return {
-      options,
       handleFilterTask,
     };
   },
