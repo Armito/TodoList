@@ -8,7 +8,7 @@
         type="radio"
         name="TASK_STATUS"
         :value="option.value"
-        :checked="option.value == 0"
+        :checked="option.value === taskStatus"
       >
       {{ option.label }}
     </label>
@@ -32,6 +32,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>

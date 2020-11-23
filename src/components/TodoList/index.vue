@@ -26,8 +26,8 @@ import Filter from './components/Filter.vue';
 import List from './components/List.vue';
 
 import { ref, computed } from 'vue';
-import { filterOptions } from './js/todoList';
 import { createRandomId } from '../../assets/js/util'
+import { filterOptions } from './js/todoList';
 
 export default {
   components: {
@@ -38,19 +38,6 @@ export default {
   setup() {
     const task = ref('');
     const taskList = ref([]);
-    const options = filterOptions;
-    const taskStatus = ref(0);
-    const taskListDisplay = computed(() => {
-      switch (taskStatus.value) {
-        case 1:
-          return taskList.value.filter((task) => !task.done);
-        case 2:
-          return taskList.value.filter((task) => task.done);
-        default:
-          return taskList.value;
-      }
-    });
-
     // 增
     const addTask = () => {
       if (task.value.trim().length) {
@@ -63,14 +50,10 @@ export default {
       }
       task.value = '';
     };
-    // 查
-    const filterTask = (status) => {
-      taskStatus.value = Number(status);
-    };
     // 改：done
     const toggleTask = (id) => {
       taskList.value = taskList.value.map((task) => {
-        if (id == task.id) {
+        if (task.id === id) {
           return {
             ...task,
             done: !task.done,
@@ -82,7 +65,7 @@ export default {
     // 改：isEdit
     const editTask = (id) => {
       taskList.value = taskList.value.map((task) => {
-        if (id == task.id) {
+        if (task.id === id) {
           return {
             ...task,
             isEdit: !task.isEdit,
@@ -94,7 +77,7 @@ export default {
     // 改：task
     const changeTask = ([id, newTask]) => {
       taskList.value = taskList.value.map((task) => {
-        if (id == task.id) {
+        if (task.id === id) {
           return {
             ...task,
             task: newTask,
@@ -108,19 +91,35 @@ export default {
     const delTask = (id) => {
       taskList.value = taskList.value.filter((task) => task.id !== id);
     };
-    
+
+    const options = filterOptions;
+    const taskStatus = ref(0);
+    const taskListDisplay = computed(() => {
+      switch (taskStatus.value) {
+        case 1:
+          return taskList.value.filter((task) => !task.done);
+        case 2:
+          return taskList.value.filter((task) => task.done);
+        default:
+          return taskList.value;
+      }
+    });
+    // 查
+    const filterTask = (status) => {
+      taskStatus.value = Number(status);
+    };
 
     return {
       task,
-      // taskList,
-      taskListDisplay,
-      options,
-      taskStatus,
       addTask,
       delTask,
       toggleTask,
       editTask,
       changeTask,
+
+      options,
+      taskStatus,
+      taskListDisplay,
       filterTask,
     };
   },
